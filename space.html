@@ -3,23 +3,25 @@
   <head>
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="style.css" media="screen" title="no title">
-    <script type="text/javascript" src="java.js"></script> 
+    <script type="text/javascript" src="java.js"></script>
     <title>C'est les méchants qu'on tire dessus !</title>
   </head>
 
 <body>
+
+    <div id="accueil"> <p>SPACE INVADER</p>
+    <p><button type="button" id="play" onclick="startGame();">Play</button></p>
+    </div>
+
     <div id="bigdiv">
 
-        <div id="score" onclick="genEnnemy()">SCORE</div>
+        <div id="score">SCORE</div>
         <div id="vie">VIE</div>
 
         <div id="container">
 
-            <div id="blocmob" >
-
-                <!-- <div id="bigmob">■</div>
-                <div id="medmob">■</div>
-                <div id="minimob">■</div> -->
+            <div id="blocmob">
+                
             </div>
 
         </div>
@@ -27,7 +29,10 @@
               <div id="missile">|</div>
               <div id="player">▲</div>
 
-        </div>
+
+    </div>
+
+
     </div>
 
 </body>

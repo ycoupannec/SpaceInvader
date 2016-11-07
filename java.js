@@ -8,6 +8,8 @@ function startGame(){
 	element = document.getElementById("player");
 
 	container=document.getElementById("bigdiv");
+	boutonPlay=document.getElementById("accueil");
+	boutonPlay.style.display="none";
 
 	taillecontainer=container.offsetWidth;
 	taillecontainer=taillecontainer/2;
@@ -21,7 +23,8 @@ function genEnnemy(){
 	container=document.getElementById("blocmob");
 	contain=""
 	taillecontainer=container.offsetWidth;
-	taillecontainer=taillecontainer/12;
+	taillecontainer=taillecontainer/13;
+	taillemargin=taillecontainer/24;
 	
 	for (var i = 1; i <=60; i++) {
 		var iDiv=document.createElement("div");
@@ -41,9 +44,12 @@ function genEnnemy(){
 			
 		}
 		iDiv.style.width=taillecontainer+"px";
-		iDiv.style.padding="2px";
+		/*iDiv.style.padding="1px";*/
+		iDiv.style.margin=taillemargin+"px";
+		iDiv.style.display="inline-block";
 		iDiv.style.backgroundColor="red";
 		iDiv.style.height=taillecontainer+"px";
+		iDiv.c
 		console.log(iDiv);
 		document.getElementById("blocmob").appendChild(iDiv);
 	
