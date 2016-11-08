@@ -1,9 +1,14 @@
 var score=0;
 var Life=3;
+var directionEnnemy="droite";
+var deplac=0;
+var paddingbloc=0;
+var timerInterval=1000;
 
 function startGame(){
 	score=0;
 	Life=3;
+	directionEnnemy="droite";
 	genEnnemy();
 	element = document.getElementById("player");
 
@@ -14,6 +19,7 @@ function startGame(){
 	taillecontainer=container.offsetWidth;
 	taillecontainer=taillecontainer/2;
 	element.style.left=taillecontainer+"px";
+	TimerGame()
 
 
 }
@@ -24,6 +30,7 @@ function genEnnemy(){
 	contain=""
 	taillecontainer=container.offsetWidth;
 	taillecontainer=taillecontainer/13;
+	deplac=taillecontainer;
 	taillemargin=taillecontainer/24;
 	
 	for (var i = 1; i <=60; i++) {
@@ -49,7 +56,7 @@ function genEnnemy(){
 		iDiv.style.display="inline-block";
 		iDiv.style.backgroundColor="red";
 		iDiv.style.height=taillecontainer+"px";
-		iDiv.c
+		
 		console.log(iDiv);
 		document.getElementById("blocmob").appendChild(iDiv);
 	
@@ -70,4 +77,48 @@ function movePlayer(direction){
 	}
 
 
+}
+
+function moveEnnemy(){
+	
+	element = document.getElementById("blocmob");
+	elementParent=document.getElementById("container");
+	margeDroite=elementParent.offsetWidth-element.offsetWidth;
+	elementDroite=element.offsetLeft;
+	margeDroite-=deplac;
+	if (directionEnnemy=="droite"){
+		
+		elementDroite+=deplac;
+		
+		element.style.marginLeft=elementDroite+"px";
+	}
+	else
+	{
+		elementDroite-=deplac;
+		
+		element.style.marginLeft=elementDroite+"px";	
+	
+	}
+	if (elementDroite<deplac){
+		paddingbloc+=deplac;
+		directionEnnemy="droite";
+		
+		element.style.paddingTop=paddingbloc+"px";
+	}else if (elementDroite>margeDroite){
+		paddingbloc+=deplac;
+		
+		directionEnnemy="gauche";
+		element.style.paddingTop=paddingbloc+"px";
+	}
+
+}
+
+function TimerGame(){
+	var timer=null;
+	
+		
+		timer=setInterval(moveEnnemy, timerInterval);	
+	
+	/*clearInterval(timer);*/
+	 
 }
