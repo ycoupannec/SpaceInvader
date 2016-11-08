@@ -28,7 +28,7 @@
 
 #blocmob{
     text-align: center;
-    height: 80%;
+/*    height: 80%;*/
     width: 55%;
     margin-left: 20px;
 }
@@ -49,13 +49,13 @@
 }
 
 #blocplayer{
-
+    max-width: 95.5%;
 }
 
 #player{
     font-size : 50px;
     color : white;
-    text-align: center;
+
 }
 
 #missile{
@@ -69,6 +69,15 @@
   font-size : 80px;
     color: white;
     text-align : center;
+}
+#gameOver{
+    display: none;
+}
+#gameOver p{
+    font-size: 3em;
+    height: 50%;
+    color: red;
+    text-align: center;
 }
 
 
