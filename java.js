@@ -3,7 +3,7 @@ var Life=3;
 var directionEnnemy="droite";
 var deplac=0;
 var paddingbloc=0;
-var timerInterval=2000;
+var timerInterval=500;
 var speedInterval=0;
 var timer=null;
 var moveMissilet=0;
@@ -36,6 +36,7 @@ function startGame(){
 	
 	
 	TimerGame();
+
 	changScore()
 
 
@@ -100,10 +101,74 @@ function movePlayer(direction){
 
 function moveEnnemy(){
 	
+	elementParent=document.getElementById("container");
 	element = document.getElementById("blocmob");
+	elementDroite=element.offsetLeft;
+	elementcompDroite=coliContainerDG("droite");
+	elementcompGauche=coliContainerDG("gauche");
+
+	elementcompDroite=document.getElementById(elementcompDroite).offsetLeft;
+	elementcompGauche=document.getElementById(elementcompGauche).offsetLeft;
+	
+	console.log(elementParent.offsetHeight);
+	if(elementcompGauche<deplac&& directionEnnemy=="gauche"){
+		console.log("godownand right");
+		paddingbloc+=deplac;
+		directionEnnemy="droite";		
+		element.style.paddingTop=paddingbloc+"px";
+	}else if (elementcompDroite>(elementParent.offsetWidth-(deplac*2))&& directionEnnemy=="droite"){
+		console.log("godownand left");
+		paddingbloc+=deplac;		
+		directionEnnemy="gauche";
+		element.style.paddingTop=paddingbloc+"px";
+	}
+	if (directionEnnemy=="droite"){		
+		console.log("movedroit");
+		elementDroite+=deplac;
+		element.style.marginLeft=elementDroite+"px";
+	}
+	else
+	{
+		console.log("moveGauche");
+		elementDroite-=deplac;	
+		element.style.marginLeft=elementDroite+"px";		
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/*element = document.getElementById("blocmob");
 	elementParent=document.getElementById("container");
 	margeDroite=elementParent.offsetWidth-element.offsetWidth;
 	elementDroite=element.offsetLeft;
+	elementcompDroite=coliContainerDG("droite");
+	elementcompGauche=coliContainerDG("gauche");
+	elementcompDroite=document.getElementById(elementDroite).offsetLeft;
+	elementcompGauche=document.getElementById(elementGauche).offsetLeft;
 	margeDroite-=deplac;
 	if (directionEnnemy=="droite"){		
 		elementDroite+=deplac;	
@@ -114,11 +179,11 @@ function moveEnnemy(){
 		elementDroite-=deplac;		
 		element.style.marginLeft=elementDroite+"px";		
 	}
-	if (elementDroite<deplac){
+	if (elementcompDroite<deplac){
 		paddingbloc+=deplac;
 		directionEnnemy="droite";		
 		element.style.paddingTop=paddingbloc+"px";
-	}else if (elementDroite>margeDroite){
+	}else if (elementcompGauche>margeDroite){
 		paddingbloc+=deplac;		
 		directionEnnemy="gauche";
 		element.style.paddingTop=paddingbloc+"px";
@@ -126,7 +191,50 @@ function moveEnnemy(){
 	if (element.offsetHeight>=elementParent.offsetHeight){
 		
 		gameOver();
+	}*/
+
+}
+function coliContainerDG(DroiteGauche){
+	namePourRetour="";
+	
+	if (DroiteGauche=="droite"){
+		tailleMax=0;
+	} else{
+		tailleMax=20000000;	
 	}
+	
+
+	for (var i = 1; i <=60; i++) {
+		
+		if (i<=12){			
+			var old = document.getElementById("bigmob"+i);
+		}else if (i<=36){			
+			var old = document.getElementById("medmob"+i);
+		}else{
+			var old = document.getElementById("minimob"+i);
+			
+		}
+		
+		if (old.style.visibility!="hidden"){
+
+			if (DroiteGauche=="droite"){
+				
+				if (tailleMax <old.offsetLeft){
+					tailleMax=old.offsetLeft;
+					
+					namePourRetour=old.id;
+				}
+
+			}else{
+				if (tailleMax >old.offsetLeft){
+					tailleMax=old.offsetLeft;
+					namePourRetour=old.id;
+				}
+			}
+		}
+	}
+	
+	return namePourRetour;
 
 }
 
@@ -205,7 +313,7 @@ function(e)
 
 function TimerMoveMiss(){
 
-	timerMiss=setInterval(MoveMissi, 50);
+	timerMiss=setInterval(MoveMissi, 20);
 
 }
 function colliMissi(){
@@ -230,9 +338,7 @@ function MoveMissi(){
 }
 
 function crashMiss(nameChamp){
-	var obj = document.getElementById("blocmob");
-	console.log(nameChamp);
-	var old=document.getElementById(nameChamp);
+	var masqueChamp=document.getElementById(nameChamp);
 	if (nameChamp.startsWith("bigmob")){
 		score+=150;
 
@@ -243,7 +349,8 @@ function crashMiss(nameChamp){
 		score+=50;
 		
 	}
-	obj.removeChild(old);
+	
+	masqueChamp.style.visibility="hidden";
 	
 
 
@@ -312,7 +419,7 @@ function positionMob(MissGauche,MissDroit,MissTop,nameMobtest){
 */
 	/*console.log(MissDroit);*/
 
-	if (ennemyMob.offsetLeft<=MissDroit && ennemyMob.offsetLeft+ennemyMob.offsetWidth>=MissDroit){
+	if (ennemyMob.offsetLeft<=MissDroit && ennemyMob.offsetLeft+ennemyMob.offsetWidth>=MissDroit && ennemyMob.style.visibility!="hidden"){
 		/*console.log("ok");*/
 		if ((ennemyMob.offsetLeft+ennemyMob.offsetWidth)>=MissGauche){
 			
