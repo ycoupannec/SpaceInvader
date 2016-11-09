@@ -3,30 +3,41 @@ var Life=3;
 var directionEnnemy="droite";
 var deplac=0;
 var paddingbloc=0;
-var timerInterval=1000;
+var timerInterval=5000;
+var speedInterval=0;
 var timer=null;
+var moveMissilet=0;
+var timerMiss=null;
+var actionMissile=false;
+
 
 
 function startGame(){
 	score=0;
 	Life=3;
-	directionEnnemy="droite";
 	deplac=0;
 	paddingbloc=0;
+	speedInterval=timerInterval;
 	timer=null;
 	directionEnnemy="droite";
 	genEnnemy();
 	element = document.getElementById("player");
-
 	container=document.getElementById("bigdiv");
 	boutonPlay=document.getElementById("accueil");
+	document.getElementById('DIV1').style.top=container.offsetHeight+"px";
+
 	boutonPlay.style.display="none";
 	document.getElementById("gameOver").style.display="none";
 
 	taillecontainer=container.offsetWidth;
 	taillecontainer=taillecontainer/2;
-	element.style.left=taillecontainer+"px";
-	TimerGame()
+	element.style.marginLeft=((document.getElementById("player").offsetWidth/2))+"px";
+	document.getElementById("DIV1").style.marginLeft=(taillecontainer-(document.getElementById("DIV1").offsetWidth/2))+"px";
+	
+	
+	TimerGame();
+	changScore()
+
 
 
 }
@@ -62,9 +73,10 @@ function genEnnemy(){
 		iDiv.style.margin=taillemargin+"px";
 		iDiv.style.display="inline-block";
 		iDiv.style.backgroundColor="red";
+
 		iDiv.style.height=taillecontainer+"px";
 		
-		console.log(iDiv);
+		
 		document.getElementById("blocmob").appendChild(iDiv);
 	
 	}
@@ -112,9 +124,6 @@ function moveEnnemy(){
 		element.style.paddingTop=paddingbloc+"px";
 	}
 	if (element.offsetHeight>=elementParent.offsetHeight){
-		console.log("gameOver");
-		console.log(elementParent.offsetHeight);
-		console.log(element.offsetHeight);
 		
 		gameOver();
 	}
@@ -143,40 +152,28 @@ function suppDiv(){
 
 	for (var i = 1; i <=60; i++) {
 		var obj = document.getElementById("blocmob");
-		if (i<=12){
-			
+		if (i<=12){			
 			var old = document.getElementById("bigmob"+i);
-
-			
-
-		}else if (i<=36){
-			
+		}else if (i<=36){			
 			var old = document.getElementById("medmob"+i);
 		}else{
 			var old = document.getElementById("minimob"+i);
 			
 		}
-		obj.removeChild(old);
-	
+		obj.removeChild(old);	
 	}
-
 }
 
 document.addEventListener('keydown',
-
 function(e)
-
 {
  var div = document.getElementById('player');
  var elementParent=document.getElementById("blocplayer");
     var marge =elementParent.offsetWidth-div.offsetLeft;
 
- console.log(e);
- console.log(marge);
-
  if(e.keyCode == 37)
     {
-  console.log(div);
+  
       
         var i = div.offsetLeft;
   			if (i>=0){
@@ -195,6 +192,133 @@ function(e)
         div.style.marginLeft = i + "px";
 
     }
- }
+ }else if (e.keyCode==32 && actionMissile==false){
+ 	var monMiss=document.getElementById('DIV1');
+	monMiss.style.display="block";
+
+		document.getElementById('DIV1').style.top=document.getElementById("bigdiv").offsetHeight+"px";
+		TimerMoveMiss();
+
+		}
    
 }, false);
+
+function TimerMoveMiss(){
+
+	timerMiss=setInterval(MoveMissi, 150);
+
+}
+function colliMissi(){
+	var monMiss=document.getElementById('DIV1');
+	if (parseInt(monMiss.style.top)<=0){
+		monMiss.style.display="none";
+		actionMissile=false;
+		clearInterval(timerMiss);
+	}
+
+}
+function MoveMissi(){
+
+	moveMissilet=parseInt(document.getElementById('DIV1').style.top);
+	moveMissilet-=10;
+	actionMissile=true;
+	document.getElementById('DIV1').style.top =moveMissilet+"px";
+	testCollision();
+	colliMissi();
+}
+
+function crashMiss(nameChamp){
+	var obj = document.getElementById("blocmob");
+	var old=document.getElementById(nameChamp);
+	if (nameChamp.startsWith("bigmob")){
+		score+=150;
+
+	} else if (nameChamp.startsWith("medmob")){
+		score+=100;
+		
+	}else if (nameChamp.startsWith("minimob")){
+		score+=50;
+		
+	}
+	obj.removeChild(old);
+	
+
+
+
+	
+	changScore();
+
+
+
+	
+}
+
+function changScore(){
+	document.getElementById("score").innerHTML="Score : "+score;
+}
+
+function changVie(){
+	document.getElementById("vie").innerHTML="Vie : "+Life;
+}
+
+function testCollision(){
+	missileMob=document.getElementById("DIV1");
+	positionMissMobGauche=missileMob.offsetLeft;
+	positionMissMobDroit=missileMob.offsetLeft+missileMob.offsetWidth;
+	positionMissMobTop=missileMob.offsetTop;
+
+	for (var i = 1; i <=60; i++) {
+		if (i<=12){
+			nameMob="bigmob"+i;
+		}else if (i<=36){
+			nameMob="medmob"+i;
+		}else{
+			nameMob="minimob"+i;
+			
+		}
+
+		if (positionMob(positionMissMobGauche,positionMissMobDroit,positionMissMobTop,nameMob)==true){
+			crashMiss(nameMob);
+			missileMob.style.display="none";
+			actionMissile=false;
+			clearInterval(timerMiss);
+		}
+	
+	}
+
+}
+
+function positionMob(MissGauche,MissDroit,MissTop,nameMob){
+
+	ennemyMob=document.getElementById(nameMob);
+	/*console.log(ennemyMob.offsetTop);*/
+	/*ennemyMob.offsetWidth;
+	ennemyMob.offsetHeight;*/
+	/*console.log("ennemyMob.offsetLeft : "+ennemyMob.offsetLeft+"<= MissDroit :"+MissDroit);*/
+	/*if (ennemyMob.offsetLeft<=MissDroit && (ennemyMob.offsetTop+ennemyMob.offsetHeight)>=MissTop && (ennemyMob.offsetLeft+ennemyMob.offsetWidth)>=MissGauche){
+		console.log(nameMob);
+		return true;
+
+	}
+	return false;
+*/
+	if (ennemyMob.offsetLeft<=MissDroit){
+		console.log("ennemyMob.offsetLeft"+ennemyMob.offsetLeft+"<=MissDroit: "+MissDroit);
+		console.log("missgauche");
+		if ((ennemyMob.offsetLeft+ennemyMob.offsetWidth)>=MissGauche){
+			console.log("ennemyMob.offsetLeft+ennemyMob.offsetWidth"+(ennemyMob.offsetLeft+ennemyMob.offsetWidth)+"<=MissGauche: "+MissGauche);
+			console.log("missdroit");
+			if ((ennemyMob.offsetTop+ennemyMob.offsetHeight)>=MissTop){
+				console.log("ennemyMob.offsetTop+ennemyMob.offsetHeight"+(ennemyMob.offsetTop+ennemyMob.offsetHeight)+"<=MissTop: "+MissTop);
+				console.log("mmissTop");
+				return true;
+
+			}
+		}
+	}
+	return false;
+	
+
+
+
+}

@@ -23,11 +23,12 @@
 
 #container{
   height: 90%;
+  /*position: relative;*/
 
 }
 
 #blocmob{
-    text-align: center;
+    /*text-align: center;*/
 /*    height: 80%;*/
     width: 55%;
     margin-left: 20px;
@@ -78,6 +79,16 @@
     height: 50%;
     color: red;
     text-align: center;
+}
+#DIV1
+{
+    position: absolute;
+    background-color:red;
+    height:20px;
+    width:10px;
+    top: 590px;
+    display: none;
+    /*left:100px;*/
 }
 
 
