@@ -1,24 +1,49 @@
 *{
   margin : 0;
   padding : 0;
-  background-color: black;
+  font-family: "Pixeled";
 }
+
+body{
+    background-image: url(img/background.png);
+}
+
+@font-face {
+font-family: 'Pixeled';
+src: url('Pixeled.ttf');
+font-weight: normal;
+font-style: normal;
+}
+
+#accueil p{
+  margin-top : 10vh;
+  font-size : 1em;
+}
+
+#accueil button{
+  font-size : 1em;
+}
+
 
 #bigdiv{
     height : 95vh;
 
 }
 
-#score {
-    width : 50%;
+#score{
+    margin-top: 2%;
+    color : white;
+    width : 100%;
     float : left;
-    color: white;
+    font-size : 1em;
 }
 
 #vie{
+    margin-top: 2%;
     color : white;
-    width : 50%;
+    width : 0%;
     float : left;
+    font-size : 1em;
 }
 
 #container{
@@ -53,9 +78,7 @@
     max-width: 95.5%;
 }
 
-#player{
-    font-size : 50px;
-    color : white;
+#player {
 
 }
 
@@ -67,32 +90,56 @@
 }
 
 #accueil{
-  font-size : 80px;
+  font-size : 2em;
     color: white;
     text-align : center;
 }
+
 #gameOver{
     display: none;
 }
+
 #gameOver p{
     font-size: 3em;
     height: 50%;
     color: red;
     text-align: center;
 }
+
+#victoire {
+  display: none;
+}
+
+#victoire  {
+  font-size: 3em;
+  height: 50%;
+  color: green;
+  text-align: center;
+}
+
 #DIV1
 {
     position: absolute;
     background-color:red;
-    height:20px;
-    width:10px;
-    top: 590px;
+    height:1%;
+    width:0.2%;
+    /*top: 590px;*/
     display: none;
     /*left:100px;*/
 }
 
+#pause {
+  font-size: 1.8em;
+  float: right;
+}
 
-button{
+button {
     color: white;
-    font-size : 50px;
+    font-size : 1.8em;
+    background-image: url(img/background.png);
+}
+
+
+br {
+  color: white;
 }

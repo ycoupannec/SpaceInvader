@@ -3,23 +3,28 @@ var Life=3;
 var directionEnnemy="droite";
 var deplac=0;
 var paddingbloc=0;
-var timerInterval=500;
+var timerInterval=100;
 var speedInterval=0;
 var timer=null;
 var moveMissilet=0;
 var timerMiss=null;
 var actionMissile=false;
+var audiomenu = new Audio('music/menu.mp3');
+audiomenu.play();
 
 
 
 function startGame(){
+	audiomenu.pause();
+	var audiogame = new Audio('music/game.mp3');
+	audiogame.play();
 	score=0;
 	Life=3;
 	deplac=0;
 	paddingbloc=0;
 	speedInterval=timerInterval;
 	timer=null;
-	directionEnnemy="droite";
+	directionEnnemy="gauche";
 	genEnnemy();
 	element = document.getElementById("player");
 	container=document.getElementById("bigdiv");
@@ -28,6 +33,9 @@ function startGame(){
 
 	boutonPlay.style.display="none";
 	document.getElementById("gameOver").style.display="none";
+	document.getElementById("score").style.display="initial";
+	document.getElementById("vie").style.display="initial";
+	document.getElementById("player").style.display="block";
 
 	taillecontainer=container.offsetWidth;
 	taillecontainer=taillecontainer/2;
@@ -57,23 +65,32 @@ function genEnnemy(){
 		if (i<=12){
 			iDiv.id="bigmob"+i;
 			iDiv.className="bigennemy";
+			iDiv.style.backgroundImage = "url('img/bigmob1.png')";
+			/*iDiv.style.backgroundImage = "url('img/bigmob2.png')";*/
+			iDiv.style.backgroundSize = "110%";
 
 			
 
 		}else if (i<=36){
 			iDiv.id="medmob"+i;
 			iDiv.className="medennemy";
+			iDiv.style.backgroundImage = "url('img/medmob1.png')";
+			/*iDiv.style.backgroundImage = "url('img/medmob2.png')";*/
+			iDiv.style.backgroundSize = "110%";
 		}else{
 			
 			iDiv.id="minimob"+i;
 			iDiv.className="miniennemy";
+			iDiv.style.backgroundImage = "url('img/minimob1.png')";
+			/*iDiv.style.backgroundImage = "url('img/minimob2.png')";*/
+			iDiv.style.backgroundSize = "110%";
 			
 		}
 		iDiv.style.width=taillecontainer+"px";
 		/*iDiv.style.padding="1px";*/
 		iDiv.style.margin=taillemargin+"px";
 		iDiv.style.display="inline-block";
-		iDiv.style.backgroundColor="red";
+		/*iDiv.style.backgroundColor="red";*/
 
 		iDiv.style.height=taillecontainer+"px";
 		
@@ -106,102 +123,52 @@ function moveEnnemy(){
 	elementDroite=element.offsetLeft;
 	elementcompDroite=coliContainerDG("droite");
 	elementcompGauche=coliContainerDG("gauche");
-
+	elementcompBas=coliContainerDG("bas");
+	
+	elementcompBas=document.getElementById(elementcompBas).offsetTop;
 	elementcompDroite=document.getElementById(elementcompDroite).offsetLeft;
 	elementcompGauche=document.getElementById(elementcompGauche).offsetLeft;
 	
-	console.log(elementParent.offsetHeight);
+	
+	if ((elementcompBas)>(elementParent.offsetHeight*0.85)){
+		
+		gameOver();
+	}
 	if(elementcompGauche<deplac&& directionEnnemy=="gauche"){
-		console.log("godownand right");
+		
 		paddingbloc+=deplac;
 		directionEnnemy="droite";		
 		element.style.paddingTop=paddingbloc+"px";
 	}else if (elementcompDroite>(elementParent.offsetWidth-(deplac*2))&& directionEnnemy=="droite"){
-		console.log("godownand left");
+		
 		paddingbloc+=deplac;		
 		directionEnnemy="gauche";
 		element.style.paddingTop=paddingbloc+"px";
 	}
 	if (directionEnnemy=="droite"){		
-		console.log("movedroit");
+		
 		elementDroite+=deplac;
 		element.style.marginLeft=elementDroite+"px";
 	}
 	else
 	{
-		console.log("moveGauche");
+		
 		elementDroite-=deplac;	
 		element.style.marginLeft=elementDroite+"px";		
 	}
+	/*GameOver*/
+	
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	/*element = document.getElementById("blocmob");
-	elementParent=document.getElementById("container");
-	margeDroite=elementParent.offsetWidth-element.offsetWidth;
-	elementDroite=element.offsetLeft;
-	elementcompDroite=coliContainerDG("droite");
-	elementcompGauche=coliContainerDG("gauche");
-	elementcompDroite=document.getElementById(elementDroite).offsetLeft;
-	elementcompGauche=document.getElementById(elementGauche).offsetLeft;
-	margeDroite-=deplac;
-	if (directionEnnemy=="droite"){		
-		elementDroite+=deplac;	
-		element.style.marginLeft=elementDroite+"px";
-	}
-	else
-	{
-		elementDroite-=deplac;		
-		element.style.marginLeft=elementDroite+"px";		
-	}
-	if (elementcompDroite<deplac){
-		paddingbloc+=deplac;
-		directionEnnemy="droite";		
-		element.style.paddingTop=paddingbloc+"px";
-	}else if (elementcompGauche>margeDroite){
-		paddingbloc+=deplac;		
-		directionEnnemy="gauche";
-		element.style.paddingTop=paddingbloc+"px";
-	}
-	if (element.offsetHeight>=elementParent.offsetHeight){
-		
-		gameOver();
-	}*/
 
 }
 function coliContainerDG(DroiteGauche){
 	namePourRetour="";
 	
-	if (DroiteGauche=="droite"){
+	if (DroiteGauche=="droite" || DroiteGauche=="bas"){
 		tailleMax=0;
-	} else{
+	} else if (DroiteGauche=="gauche"){
 		tailleMax=20000000;	
-	}
+	} 
 	
 
 	for (var i = 1; i <=60; i++) {
@@ -225,9 +192,14 @@ function coliContainerDG(DroiteGauche){
 					namePourRetour=old.id;
 				}
 
-			}else{
+			}else if (DroiteGauche=="gauche") {
 				if (tailleMax >old.offsetLeft){
 					tailleMax=old.offsetLeft;
+					namePourRetour=old.id;
+				}
+			}else {
+				if (tailleMax <old.offsetTop){
+					tailleMax=old.offsetTop;
 					namePourRetour=old.id;
 				}
 			}
@@ -244,12 +216,29 @@ function TimerGame(){
 }
 
 function gameOver(){
+
 	document.getElementById("accueil").style.display="block";
 	document.getElementById("gameOver").style.display="block";
 	document.getElementById("bigdiv").style.display="hidden";
 	document.getElementById("blocmob").style.paddingTop="0px";
 	document.getElementById("blocmob").style.marginLeft="20px";
+	document.getElementById("vie").style.display="none";
+	document.getElementById("player").style.display="none";
 
+
+	clearInterval(timer);
+	suppDiv();
+
+}
+
+function victoire(){
+	document.getElementById("accueil").style.display="block";
+	document.getElementById("victoire").style.display="block";
+	document.getElementById("bigdiv").style.display="hidden";
+	document.getElementById("blocmob").style.paddingTop="0px";
+	document.getElementById("blocmob").style.marginLeft="20px";
+	document.getElementById("vie").style.display="none";
+	document.getElementById("player").style.display="none";
 
 
 	clearInterval(timer);
@@ -275,18 +264,21 @@ function suppDiv(){
 document.addEventListener('keydown',
 function(e)
 {
+
+
  var div = document.getElementById('player');
+ var monMiss=document.getElementById('DIV1');
  var elementParent=document.getElementById("blocplayer");
     var marge =elementParent.offsetWidth-div.offsetLeft;
 
- if(e.keyCode == 37)
-    {
-  
-      
+	 if(e.keyCode == 37)
+    {      
         var i = div.offsetLeft;
   			if (i>=0){
         i-=10;
         div.style.marginLeft = i + "px";
+		
+
     }
   }
 
@@ -295,19 +287,38 @@ function(e)
     {
         var i = div.offsetLeft;
   			if (i <= elementParent.offsetWidth) {
-
         i+=10;
         div.style.marginLeft = i + "px";
+		
 
     }
+
+
  }else if (e.keyCode==32 && actionMissile==false){
- 	var monMiss=document.getElementById('DIV1');
+
 	monMiss.style.display="block";
 
-		document.getElementById('DIV1').style.top=document.getElementById("bigdiv").offsetHeight+"px";
-		TimerMoveMiss();
+		document.getElementById('DIV1').style.top=document.getElementById('container').offsetHeight+"px";
+		console.log(document.getElementById('player').offsetWidth/2);
+		document.getElementById('DIV1').style.marginLeft=parseInt(document.getElementById('player').style.marginLeft)+(document.getElementById('imgPlayer').offsetWidth/2)+"px";
+		TimerMoveMiss(); 
+	 	
 
-		}
+}
+
+
+/*if (actionMissile==false){
+
+  	if (i>=0){
+        i-=10;
+        monMiss.style.marginLeft = i + "px";
+	}
+
+  	if (i <= elementParent.offsetWidth) {
+        i+=10;
+        monMiss.style.marginLeft = i + "px"; 
+	}
+}*/
    
 }, false);
 
@@ -318,9 +329,11 @@ function TimerMoveMiss(){
 }
 function colliMissi(){
 	var monMiss=document.getElementById('DIV1');
+	console.log("toto");
 	if (parseInt(monMiss.style.top)<=0){
 		monMiss.style.display="none";
 		actionMissile=false;
+		console.log("toto");
 		clearInterval(timerMiss);
 	}
 
@@ -331,9 +344,15 @@ function MoveMissi(){
 	moveMissilet-=10;
 	actionMissile=true;
 	document.getElementById('DIV1').style.top =moveMissilet+"px";
+	colliMissi();
 	if (testCollision()==true){
-		colliMissi();
+		
+		document.getElementById('DIV1').style.display="none";
+		actionMissile=false;
+		console.log("toto");
+		clearInterval(timerMiss);
 	}
+	testVictoire();
 	
 }
 
@@ -364,8 +383,16 @@ function crashMiss(nameChamp){
 }
 
 function changScore(){
-
-	document.getElementById("score").innerHTML="Score : "+score;
+	document.getElementById("score").innerHTML="Ton score est de : "+score;
+	if (score<2000) {
+		document.getElementById("score").style.color="red";
+	}
+	if (score>2000) {
+		document.getElementById("score").style.color="yellow";
+	}
+	if (score>4000) {
+		document.getElementById("score").style.color="green";
+	}
 	
 
 }
@@ -379,8 +406,10 @@ function testCollision(){
 	positionMissMobGauche=missileMob.offsetLeft;
 	positionMissMobDroit=missileMob.offsetLeft+missileMob.offsetWidth;
 	positionMissMobTop=missileMob.offsetTop;
+	
 
 	for (var i = 1; i <=60; i++) {
+
 		if (i<=12){
 			nameMob="bigmob"+i;
 		}else if (i<=36){
@@ -389,6 +418,8 @@ function testCollision(){
 			nameMob="minimob"+i;
 			
 		}
+		
+
 
 		if (positionMob(positionMissMobGauche,positionMissMobDroit,positionMissMobTop,nameMob)==true){
 			crashMiss(nameMob);
@@ -402,7 +433,27 @@ function testCollision(){
 	return false;
 
 }
+function testVictoire(){
+	nbHidden=0;
+	for (var i = 1; i <=60; i++) {
 
+		if (i<=12){
+			nameMob="bigmob"+i;
+		}else if (i<=36){
+			nameMob="medmob"+i;
+		}else{
+			nameMob="minimob"+i;
+			
+		}
+		if(document.getElementById(nameMob).style.visibility=="hidden"){
+			nbHidden++;
+		}
+	
+	}
+	if (nbHidden==59){
+		victoire();
+	}
+}
 function positionMob(MissGauche,MissDroit,MissTop,nameMobtest){
 
 	ennemyMob=document.getElementById(nameMobtest);
@@ -424,11 +475,6 @@ function positionMob(MissGauche,MissDroit,MissTop,nameMobtest){
 		if ((ennemyMob.offsetLeft+ennemyMob.offsetWidth)>=MissGauche){
 			
 			if ((ennemyMob.offsetTop+ennemyMob.offsetHeight)>=MissTop){
-				
-				console.log("nnemyMob.offsetTop : "+ennemyMob.offsetTop+" ennemyMob.offsetHeight : ");
-				console.log(ennemyMob.offsetHeight+" MissTop : "+MissTop+" ennemyMob.offsetLeft : " + ennemyMob.offsetLeft+ " ennemyMob.offsetWidth : "+ennemyMob.offsetWidth+" MissDroit : "+MissDroit);
-				console.log(nameMob);
-				console.log("ennemyMob.style.left : "+ennemyMob.style.Left);
 
 				return true;
 
