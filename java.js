@@ -3,7 +3,7 @@ var Life=3;
 var directionEnnemy="droite";
 var deplac=0;
 var paddingbloc=0;
-var timerInterval=5000;
+var timerInterval=2000;
 var speedInterval=0;
 var timer=null;
 var moveMissilet=0;
@@ -205,7 +205,7 @@ function(e)
 
 function TimerMoveMiss(){
 
-	timerMiss=setInterval(MoveMissi, 150);
+	timerMiss=setInterval(MoveMissi, 50);
 
 }
 function colliMissi(){
@@ -223,12 +223,15 @@ function MoveMissi(){
 	moveMissilet-=10;
 	actionMissile=true;
 	document.getElementById('DIV1').style.top =moveMissilet+"px";
-	testCollision();
-	colliMissi();
+	if (testCollision()==true){
+		colliMissi();
+	}
+	
 }
 
 function crashMiss(nameChamp){
 	var obj = document.getElementById("blocmob");
+	console.log(nameChamp);
 	var old=document.getElementById(nameChamp);
 	if (nameChamp.startsWith("bigmob")){
 		score+=150;
@@ -254,7 +257,10 @@ function crashMiss(nameChamp){
 }
 
 function changScore(){
+
 	document.getElementById("score").innerHTML="Score : "+score;
+	
+
 }
 
 function changVie(){
@@ -282,15 +288,17 @@ function testCollision(){
 			missileMob.style.display="none";
 			actionMissile=false;
 			clearInterval(timerMiss);
+			return true;
 		}
 	
 	}
+	return false;
 
 }
 
-function positionMob(MissGauche,MissDroit,MissTop,nameMob){
+function positionMob(MissGauche,MissDroit,MissTop,nameMobtest){
 
-	ennemyMob=document.getElementById(nameMob);
+	ennemyMob=document.getElementById(nameMobtest);
 	/*console.log(ennemyMob.offsetTop);*/
 	/*ennemyMob.offsetWidth;
 	ennemyMob.offsetHeight;*/
@@ -302,15 +310,19 @@ function positionMob(MissGauche,MissDroit,MissTop,nameMob){
 	}
 	return false;
 */
-	if (ennemyMob.offsetLeft<=MissDroit){
-		console.log("ennemyMob.offsetLeft"+ennemyMob.offsetLeft+"<=MissDroit: "+MissDroit);
-		console.log("missgauche");
+	/*console.log(MissDroit);*/
+
+	if (ennemyMob.offsetLeft<=MissDroit && ennemyMob.offsetLeft+ennemyMob.offsetWidth>=MissDroit){
+		/*console.log("ok");*/
 		if ((ennemyMob.offsetLeft+ennemyMob.offsetWidth)>=MissGauche){
-			console.log("ennemyMob.offsetLeft+ennemyMob.offsetWidth"+(ennemyMob.offsetLeft+ennemyMob.offsetWidth)+"<=MissGauche: "+MissGauche);
-			console.log("missdroit");
+			
 			if ((ennemyMob.offsetTop+ennemyMob.offsetHeight)>=MissTop){
-				console.log("ennemyMob.offsetTop+ennemyMob.offsetHeight"+(ennemyMob.offsetTop+ennemyMob.offsetHeight)+"<=MissTop: "+MissTop);
-				console.log("mmissTop");
+				
+				console.log("nnemyMob.offsetTop : "+ennemyMob.offsetTop+" ennemyMob.offsetHeight : ");
+				console.log(ennemyMob.offsetHeight+" MissTop : "+MissTop+" ennemyMob.offsetLeft : " + ennemyMob.offsetLeft+ " ennemyMob.offsetWidth : "+ennemyMob.offsetWidth+" MissDroit : "+MissDroit);
+				console.log(nameMob);
+				console.log("ennemyMob.style.left : "+ennemyMob.style.Left);
+
 				return true;
 
 			}
